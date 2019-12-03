@@ -37,7 +37,14 @@ __version__ = 7
 import canvas_requests
 
 def main(user_id):
-    return canvas_requests.get_user(user_id)
+    user = canvas_requests.get_user(user_id)
+    print_user_info(user)
+    available_courses = filter_available_courses(canvas_requests.get_courses(user_id))
+    print_courses(available_courses)
+    course_ids = get_course_ids(available_courses)
+    valid_id = choose_course(course_ids)
+    submissions = canvas_requests.get_submissions(user_id, valid_id)
+    summarize_points(submissions)
 
 def print_user_info(user_dictionary):
     print('Name: ' + user_dictionary['name'])
@@ -60,13 +67,13 @@ def get_course_ids(course_dictionaries):
     course_ids = []
     for course in course_dictionaries:
         course_ids.append(course['id'])
-    print()
+    print(course_ids)
     return course_ids
 
 def choose_course(course_ids):
     user_input = input("Enter a valid id")
     user_input = int(user_input)
-    while int(user_input) not in course_ids:
+    while user_input not in course_ids:
         user_input = int(input("Enter a valid id"))
     return user_input
 
@@ -88,13 +95,10 @@ def summarize_points(submissions):
 
 
 
+
+
 if __name__ == "__main__":
-    print_user_info(canvas_requests.get_user("hermione"))
-    filter_available_courses(canvas_requests.get_courses('hermione'))
-    print_courses(canvas_requests.get_courses('hermione'))
-    get_course_ids(canvas_rxxequests.get_courses('hermione'))
-    choose_course(canvas_requests.get_courses('hermione'))
-    summarize_points(canvas_requests.get_submissions('hermione'))
+    main('hermione')
     # main
     # main('harry')
     
